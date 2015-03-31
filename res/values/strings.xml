@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">手机卫士</string>
+    <string name="main_screen">主界面</string>
+    <string name="lost_protected">手机防盗</string>
+    <string name="setupguide1">设置向导1/4</string>
+    <string name="setupguide2">设置向导2/4</string>
+    <string name="setupguide3">设置向导3/4</string>
+    <string name="setupguide4">设置向导4/4</string>
+    <string name="select_contact">选择联系人</string>
+    <string name="antivirus">手机杀毒</string>
+
+</resources>

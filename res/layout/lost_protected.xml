@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView 
+        android:id="@+id/tv_lost_protected_number"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="安全手机号码"
+	    android:textSize="20sp"
+	    android:layout_marginTop="5dip"
+        />
+    <View 
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dip"
+	    android:layout_height="1dip"
+	    android:background="#ffffffff"
+		/>
+    <CheckBox 
+        android:id="@+id/cb_isprotecting"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dip"
+       	android:layout_height="wrap_content"
+        android:text="没有开启防盗"
+        android:textSize="20sp"
+        />
+    <View 
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dip"
+	    android:layout_height="1dip"
+	    android:background="#ffffffff"
+		/>
+    <TextView 
+        android:id="@+id/tv_reentry_setup_guide"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="重新进入设置向导"
+	    android:textSize="20sp"
+	    android:layout_marginTop="5dip"
+        />
+
+</LinearLayout>
