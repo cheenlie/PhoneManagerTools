@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+ <TextView
+     android:id="@+id/tv_adtools_query"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_marginTop="5sp"
+     android:textSize="24sp"
+     android:text="手机号码归属地查询"
+     >  
+ </TextView>  
+ <View
+     android:layout_width="match_parent"
+     android:layout_height="1dp"
+     android:layout_marginTop="5dp"
+	android:background="@android:color/white"
+     >  
+ </View>  
+
+</LinearLayout>
