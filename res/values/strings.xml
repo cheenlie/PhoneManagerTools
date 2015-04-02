@@ -9,5 +9,7 @@
     <string name="setupguide4">设置向导4/4</string>
     <string name="select_contact">选择联系人</string>
     <string name="antivirus">手机杀毒</string>
+    <string name="adtools">高级工具</string>
+    <string name="querynumber">号码归属地查询</string>
 
 </resources>

@@ -11,8 +11,10 @@ public final class R {
     public static final class anim {
         public static final int alpha_in=0x7f040000;
         public static final int alpha_out=0x7f040001;
-        public static final int translate_in=0x7f040002;
-        public static final int translate_out=0x7f040003;
+        public static final int cycle_7=0x7f040002;
+        public static final int shake=0x7f040003;
+        public static final int translate_in=0x7f040004;
+        public static final int translate_out=0x7f040005;
     }
     public static final class attr {
     }
@@ -52,65 +54,73 @@ public final class R {
         public static final int widget08=0x7f02001c;
     }
     public static final class id {
-        public static final int PB_splash_version=0x7f0a001d;
-        public static final int antivirus_end_ok_bt=0x7f0a0004;
-        public static final int bt_bind=0x7f0a0014;
-        public static final int bt_first_dialog_cancel=0x7f0a0008;
-        public static final int bt_first_dialog_ok=0x7f0a0007;
-        public static final int bt_next=0x7f0a0013;
-        public static final int bt_normal_dialog_cancel=0x7f0a0011;
-        public static final int bt_normal_dialog_ok=0x7f0a0010;
-        public static final int bt_pre=0x7f0a001a;
-        public static final int bt_previous=0x7f0a0016;
-        public static final int bt_select_contact=0x7f0a0018;
-        public static final int bt_setup_finish=0x7f0a0019;
-        public static final int cb_bind=0x7f0a0015;
-        public static final int cb_isprotecting=0x7f0a000a;
-        public static final int et_first_entry_pwd=0x7f0a0005;
-        public static final int et_first_entry_pwd_confirm=0x7f0a0006;
-        public static final int et_normal_entry_pwd=0x7f0a000f;
-        public static final int et_setup3_number=0x7f0a0017;
-        public static final int gv_main=0x7f0a000c;
-        public static final int iv=0x7f0a0000;
-        public static final int iv_main_icon=0x7f0a000d;
-        public static final int ll=0x7f0a0003;
-        public static final int ll_splash_main=0x7f0a001b;
-        public static final int lv_select_contact=0x7f0a0012;
-        public static final int progressBar1=0x7f0a0001;
-        public static final int sv=0x7f0a0002;
-        public static final int tv_lost_protected_number=0x7f0a0009;
-        public static final int tv_main_name=0x7f0a000e;
-        public static final int tv_reentry_setup_guide=0x7f0a000b;
-        public static final int tv_splash_version=0x7f0a001c;
+        public static final int PB_splash_version=0x7f0a0020;
+        public static final int antivirus_end_ok_bt=0x7f0a0005;
+        public static final int bt_bind=0x7f0a0017;
+        public static final int bt_first_dialog_cancel=0x7f0a0009;
+        public static final int bt_first_dialog_ok=0x7f0a0008;
+        public static final int bt_next=0x7f0a0016;
+        public static final int bt_normal_dialog_cancel=0x7f0a0012;
+        public static final int bt_normal_dialog_ok=0x7f0a0011;
+        public static final int bt_pre=0x7f0a001d;
+        public static final int bt_previous=0x7f0a0019;
+        public static final int bt_select_contact=0x7f0a001b;
+        public static final int bt_setup_finish=0x7f0a001c;
+        public static final int cb_bind=0x7f0a0018;
+        public static final int cb_isprotecting=0x7f0a000b;
+        public static final int et_first_entry_pwd=0x7f0a0006;
+        public static final int et_first_entry_pwd_confirm=0x7f0a0007;
+        public static final int et_normal_entry_pwd=0x7f0a0010;
+        public static final int et_num=0x7f0a0013;
+        public static final int et_setup3_number=0x7f0a001a;
+        public static final int gv_main=0x7f0a000d;
+        public static final int iv=0x7f0a0001;
+        public static final int iv_main_icon=0x7f0a000e;
+        public static final int ll=0x7f0a0004;
+        public static final int ll_splash_main=0x7f0a001e;
+        public static final int lv_select_contact=0x7f0a0015;
+        public static final int progressBar1=0x7f0a0002;
+        public static final int sv=0x7f0a0003;
+        public static final int tv_adtools_query=0x7f0a0000;
+        public static final int tv_lost_protected_number=0x7f0a000a;
+        public static final int tv_main_name=0x7f0a000f;
+        public static final int tv_query_number_res=0x7f0a0014;
+        public static final int tv_reentry_setup_guide=0x7f0a000c;
+        public static final int tv_splash_version=0x7f0a001f;
     }
     public static final class layout {
-        public static final int antivirus_main=0x7f030000;
-        public static final int first_entry_dialog=0x7f030001;
-        public static final int lost_protected=0x7f030002;
-        public static final int mainscreen=0x7f030003;
-        public static final int mainscreen_item=0x7f030004;
-        public static final int moblesafeactivity=0x7f030005;
-        public static final int normal_entry_dialog=0x7f030006;
-        public static final int select_contact=0x7f030007;
-        public static final int setupguide1=0x7f030008;
-        public static final int setupguide2=0x7f030009;
-        public static final int setupguide3=0x7f03000a;
-        public static final int setupguide4=0x7f03000b;
-        public static final int splash=0x7f03000c;
+        public static final int adtools=0x7f030000;
+        public static final int antivirus_main=0x7f030001;
+        public static final int first_entry_dialog=0x7f030002;
+        public static final int lost_protected=0x7f030003;
+        public static final int mainscreen=0x7f030004;
+        public static final int mainscreen_item=0x7f030005;
+        public static final int moblesafeactivity=0x7f030006;
+        public static final int normal_entry_dialog=0x7f030007;
+        public static final int query=0x7f030008;
+        public static final int select_contact=0x7f030009;
+        public static final int setupguide1=0x7f03000a;
+        public static final int setupguide2=0x7f03000b;
+        public static final int setupguide3=0x7f03000c;
+        public static final int setupguide4=0x7f03000d;
+        public static final int splash=0x7f03000e;
     }
     public static final class raw {
         public static final int ylzs=0x7f060000;
     }
     public static final class string {
-        public static final int antivirus=0x7f080009;
-        public static final int app_name=0x7f080001;
-        public static final int lost_protected=0x7f080003;
-        public static final int main_screen=0x7f080002;
-        public static final int select_contact=0x7f080008;
-        public static final int setupguide1=0x7f080004;
-        public static final int setupguide2=0x7f080005;
-        public static final int setupguide3=0x7f080006;
-        public static final int setupguide4=0x7f080007;
+        public static final int addressurl=0x7f080001;
+        public static final int adtools=0x7f08000b;
+        public static final int antivirus=0x7f08000a;
+        public static final int app_name=0x7f080002;
+        public static final int lost_protected=0x7f080004;
+        public static final int main_screen=0x7f080003;
+        public static final int querynumber=0x7f08000c;
+        public static final int select_contact=0x7f080009;
+        public static final int setupguide1=0x7f080005;
+        public static final int setupguide2=0x7f080006;
+        public static final int setupguide3=0x7f080007;
+        public static final int setupguide4=0x7f080008;
         public static final int updateurl=0x7f080000;
     }
     public static final class style {

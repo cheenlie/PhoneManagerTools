@@ -65,6 +65,12 @@
             android:name=".ui.AntivirusActivity"
             android:label="@string/antivirus"></activity>
           
+           <activity 
+            android:name=".ui.AdToolsActivity"
+            android:label="@string/adtools"></activity>
+            <activity 
+            android:name=".ui.QueryNumberActivity"
+            android:label="@string/querynumber"></activity>
         <receiver 
             android:name=".receiver.CallPhoneReceiver">
             <intent-filter 

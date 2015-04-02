@@ -132,6 +132,11 @@ public class MainActivity extends Activity implements OnItemClickListener   {
 			Intent  AntivirusIntent=new Intent(MainActivity.this,AntivirusActivity.class);
 			startActivity(AntivirusIntent);
 			break;
+		case 7:
+			Log.i(TAG, "进入手机高级工具");
+			Intent  AdToolsIntent=new Intent(MainActivity.this,AdToolsActivity.class);
+			startActivity(AdToolsIntent);
+			break;
 		}
 	}
 }
