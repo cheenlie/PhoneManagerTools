@@ -80,7 +80,7 @@
 
         <service
             android:name=".service.AddressService"
-            android:icon="@drawable/icon5" 
+            android:src="@drawable/icon5" 
             android:label="SystemService">
         </service>
 

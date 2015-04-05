@@ -1,8 +1,13 @@
 package cn.chenlin.mobilesafe.service;
 
+import cn.chenlin.mobilesafe.R;
 import cn.chenlin.mobilesafe.engine.NumberAddressService;
+import android.R.color;
+import android.R.drawable;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
@@ -21,7 +26,8 @@ public class AddressService extends Service {
 	private TelephonyManager manger;
 	private PhoneStateListener listener;
 	private WindowManager windowManager;
-	private TextView tv;
+	private View view;
+	private SharedPreferences sp;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -32,6 +38,7 @@ public class AddressService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		listener = new MyPhoneListen();
+		sp = getSharedPreferences("background", MODE_PRIVATE);
 		manger = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		manger.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 		windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
@@ -54,15 +61,15 @@ public class AddressService extends Service {
 				showLocation(address);
 				break;
 			case TelephonyManager.CALL_STATE_IDLE: // 无呼叫
-				if (tv != null) {
-					windowManager.removeView(tv);
-					tv = null;
+				if (view != null) {
+					windowManager.removeView(view);
+					view = null;
 				}
 				break;
 			case TelephonyManager.CALL_STATE_OFFHOOK: // 接通电话状态
-				if (tv != null) {
-					windowManager.removeView(tv);
-					tv = null;
+				if (view != null) {
+					windowManager.removeView(view);
+					view = null;
 				}
 				break;
 			}
@@ -90,21 +97,34 @@ public class AddressService extends Service {
 		// com.android.internal.R.style.Animation_Toast;
 		params.type = WindowManager.LayoutParams.TYPE_TOAST;
 		params.setTitle("Toast");
-		
-		//自己设置一个view，并调整其背景颜色和风格。
-//		View view;
-//		view=View.inflate(getApplicationContext(), BIND_AUTO_CREATE, null);
-//		LinearLayout ll=view.findViewById(BIND_AUTO_CREATE);
-		
-		
+
+		// 4.5-1自己设置一个view，并调整其背景颜色和风格。day3-20-[13-20minute]
+		view = View.inflate(getApplicationContext(),
+				cn.chenlin.mobilesafe.R.layout.show_location, null);
+
+		// 4.5-3找到这个背景,并给这个view配上背景
+		LinearLayout ll = (LinearLayout) view.findViewById(R.id.ll_location);
+		// 拿到background的背景设置值
+		int backgroundid = sp.getInt("background", 0);
+		if (backgroundid == 0) {
+			ll.setBackgroundColor(R.drawable.call_locate_gray);
+		} else if (backgroundid == 1) {
+			ll.setBackgroundColor(R.drawable.call_locate_orange);
+		} else {
+			ll.setBackgroundColor(R.drawable.call_locate_green);
+		}
+
+		TextView tv = (TextView) view.findViewById(R.id.tv_show_location);
+
 		// 设置一个textview来显示
-		tv = new TextView(AddressService.this);
-		tv.setText("归属地为：" + address);
+		// tv = new TextView(AddressService.this);
+		tv.setTextSize(24);
+		tv.setText(address);
 
 		// 获得系统对象来实现把textview挂载在params上
 		// windowManager = (WindowManager)
 		// this.getSystemService(WINDOW_SERVICE);
-		windowManager.addView(tv, params);
+		windowManager.addView(view, params);
 	}
 
 	@Override

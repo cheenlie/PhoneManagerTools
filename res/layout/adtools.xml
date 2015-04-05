@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:orientation="vertical" >
-            
+
             <TextView
                 android:layout_width="280dip"
                 android:layout_height="wrap_content"
@@ -52,6 +52,22 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white" >
+    </View>
+
+    <TextView
+        android:id="@+id/tv_adtools_setbg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:text="设置来电风格"
+        android:textSize="24sp" >
+    </TextView>
 
     <View
         android:layout_width="match_parent"
