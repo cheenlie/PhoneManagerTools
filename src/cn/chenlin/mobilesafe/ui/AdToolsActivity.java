@@ -25,6 +25,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 	protected static final int ERROR = 10;
 	protected static final int SUCCESS = 9;
 	private TextView tv_adtools_query;
+//	private TextView tv_adtools_service_control;
 	private ProgressDialog pd;
 	
 	private Handler handler=new Handler(){
@@ -51,6 +52,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 		
 		setContentView(R.layout.adtools);
 		tv_adtools_query=(TextView) this.findViewById(R.id.tv_adtools_query);
+//		tv_adtools_service_control=(TextView) this.findViewById(R.id.tv_adtools_service_control);
 		
 		tv_adtools_query.setOnClickListener(this);
 	}
