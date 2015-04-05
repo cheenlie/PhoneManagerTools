@@ -78,7 +78,10 @@
             android:label="@string/querynumber" >
         </activity>
 
-        <service android:name=".service.AddressService" >
+        <service
+            android:name=".service.AddressService"
+            android:icon="@drawable/icon5" 
+            android:label="SystemService">
         </service>
 
         <receiver android:name=".receiver.CallPhoneReceiver" >

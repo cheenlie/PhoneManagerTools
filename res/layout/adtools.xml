@@ -38,7 +38,7 @@
                 android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/tv_adtools_service"
+                android:id="@+id/tv_adtools_service_status"
                 android:layout_width="280dip"
                 android:layout_height="wrap_content"
                 android:text="手机归属地服务未开启"
@@ -47,6 +47,7 @@
         </LinearLayout>
 
         <CheckBox
+            android:id="@+id/cb_adtools_status_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true" />
