@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 public class DragViewActivity extends Activity implements OnTouchListener {
@@ -26,19 +27,39 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dragview);
-		iv_dragview = (ImageView) this.findViewById(R.id.iv_drag_view);
+		iv_dragview = (ImageView) this.findViewById(R.id.iv_drag_view);//①
 		tv_dragview_lable = (TextView) this.findViewById(R.id.tv_drag_view_lable);	
 		sp=getSharedPreferences("config", MODE_PRIVATE);
-		//加载上次imageview的位置
-		int x=sp.getInt("lastx", 0);  //默认是0
-		int y=sp.getInt("lasty", 0);
-		iv_dragview.layout(iv_dragview.getLeft()+x, iv_dragview.getTop()+y, iv_dragview.getRight()+x, iv_dragview.getBottom()+y);
+		//加载上次imageview的位置[存在问题：这下面三句话执行完毕可能上面的①还没有执行完毕，所以最后画出的是初始位置]
+		//把这三句话放到getresume生命周期中，就能保证先执行①再执行下面三句话
+//		int x=sp.getInt("lastx", 0);  //默认是0
+//		int y=sp.getInt("lasty", 0);
+//		iv_dragview.layout(iv_dragview.getLeft()+x, iv_dragview.getTop()+y, iv_dragview.getRight()+x, iv_dragview.getBottom()+y);
 		
 		//给触摸时间定义一个监听器
 		iv_dragview.setOnTouchListener(this);
-	
-		
 	}
+	
+	
+
+	//onresume是在当控件都显示出来，并且获得焦点后才会调用
+	@Override
+	protected void onResume() {   
+		super.onResume();
+		int x=sp.getInt("lastx", 0);  //默认是0
+		int y=sp.getInt("lasty", 0);
+		//重新渲染view控件：方法一，此处无效
+//		iv_dragview.layout(iv_dragview.getLeft()+x, iv_dragview.getTop()+y, iv_dragview.getRight()+x, iv_dragview.getBottom()+y);
+		//iv_dragview.invalidate();//让这个控件重新去渲染一下view控件
+		//重新渲染view控件：方法二，肯定有效
+		//注意导入的默认包不是“android.view.WindowManager.LayoutParams;”是RelativeLayout才可以
+		LayoutParams params=(LayoutParams) iv_dragview.getLayoutParams(); //获取iv_dragview的布局
+		params.leftMargin=x;//离左边窗体的距离
+		params.topMargin=y;
+		iv_dragview.setLayoutParams(params);
+	}
+
+
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
