@@ -2,10 +2,7 @@ package cn.chenlin.mobilesafe.ui;
 
 import cn.chenlin.mobilesafe.R;
 import android.app.Activity;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Event;
-import android.support.v4.app.NotificationCompat.Action;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,13 +38,13 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 		case R.id.iv_drag_view:
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:  //手指第一次放上去的事件
-				startX=(int) event.getX();
-				startY=(int) event.getY();
+				startX=(int) event.getRawX();
+				startY=(int) event.getRawY();
 				break;
 			case MotionEvent.ACTION_MOVE:  //移动事件
 				//获取手指移动时的坐标
-				int x=(int) event.getX();
-				int y=(int) event.getY();
+				int x=(int) event.getRawX();
+				int y=(int) event.getRawY();
 				//移动的距离
 				int dx=x-startX;
 				int dy=y-startY;
@@ -62,8 +59,8 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 				iv_dragview.layout(l+dx, t+dy, r+dx, b+dy);
 				
 				//把手指最后一次的位置保存下来
-				startX=(int) event.getX();
-				startY=(int) event.getY();
+				startX=(int) event.getRawX();
+				startY=(int) event.getRawY();
 				
 				break;
 			case MotionEvent.ACTION_UP:   //手指离开屏幕
