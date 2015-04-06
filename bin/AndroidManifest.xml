@@ -77,7 +77,10 @@
             android:name=".ui.QueryNumberActivity"
             android:label="@string/querynumber" >
         </activity>
-
+        <activity
+            android:name=".ui.DragViewActivity" 
+            android:theme="@android:style/Theme.Black.NoTitleBar">
+        </activity>
         <service
             android:name=".service.AddressService"
             android:src="@drawable/icon5" 

@@ -47,6 +47,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 	private Intent serviceIntent;
 	private TextView tv_setbg;
 	private SharedPreferences sp;
+	private TextView tv_change_location;
 
 	private Handler handler = new Handler() {
 
@@ -76,6 +77,8 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 				.findViewById(R.id.tv_adtools_service_status);
 		cb_adtools_status_control = (CheckBox) this
 				.findViewById(R.id.cb_adtools_status_control);
+		tv_change_location=(TextView) this.findViewById(R.id.tv_adtools_change_location);
+		tv_change_location.setOnClickListener(this);
 		tv_setbg = (TextView) this.findViewById(R.id.tv_adtools_setbg);
 
 		tv_setbg.setOnClickListener(this); // 和下面的tv_adtools_query的点击事件共用一个onClick（）
@@ -176,6 +179,11 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 			});
 			//最后把builder展现出来
 			builder.show();
+			break;
+		case R.id.tv_adtools_change_location:
+			
+			//设置一个移动界面
+			
 			break;
 		}
 	}
