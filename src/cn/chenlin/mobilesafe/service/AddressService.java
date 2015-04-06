@@ -38,7 +38,7 @@ public class AddressService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		listener = new MyPhoneListen();
-		sp = getSharedPreferences("background", MODE_PRIVATE);
+		sp = getSharedPreferences("config", MODE_PRIVATE);
 		manger = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		manger.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 		windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
@@ -107,11 +107,11 @@ public class AddressService extends Service {
 		// 拿到background的背景设置值
 		int backgroundid = sp.getInt("background", 0);
 		if (backgroundid == 0) {
-			ll.setBackgroundColor(R.drawable.call_locate_gray);
+			ll.setBackgroundResource(R.drawable.call_locate_gray);
 		} else if (backgroundid == 1) {
-			ll.setBackgroundColor(R.drawable.call_locate_orange);
+			ll.setBackgroundResource(R.drawable.call_locate_orange);
 		} else {
-			ll.setBackgroundColor(R.drawable.call_locate_green);
+			ll.setBackgroundResource(R.drawable.call_locate_green);
 		}
 
 		TextView tv = (TextView) view.findViewById(R.id.tv_show_location);

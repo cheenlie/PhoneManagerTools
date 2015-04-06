@@ -70,7 +70,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.adtools);
-		sp=getSharedPreferences("cofig", Context.MODE_PRIVATE);
+		sp=getSharedPreferences("config", Context.MODE_PRIVATE);
 		
 		tv_adtools_service_status = (TextView) this
 				.findViewById(R.id.tv_adtools_service_status);
