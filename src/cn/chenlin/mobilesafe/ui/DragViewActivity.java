@@ -2,6 +2,8 @@ package cn.chenlin.mobilesafe.ui;
 
 import cn.chenlin.mobilesafe.R;
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,6 +19,8 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 	private TextView tv_dragview_lable;
 	int startX;
 	int startY;
+	private SharedPreferences sp;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +28,15 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 		setContentView(R.layout.dragview);
 		iv_dragview = (ImageView) this.findViewById(R.id.iv_drag_view);
 		tv_dragview_lable = (TextView) this.findViewById(R.id.tv_drag_view_lable);	
+		sp=getSharedPreferences("config", MODE_PRIVATE);
+		//加载上次imageview的位置
+		int x=sp.getInt("lastx", 0);  //默认是0
+		int y=sp.getInt("lasty", 0);
+		iv_dragview.layout(iv_dragview.getLeft()+x, iv_dragview.getTop()+y, iv_dragview.getRight()+x, iv_dragview.getBottom()+y);
 		
 		//给触摸时间定义一个监听器
 		iv_dragview.setOnTouchListener(this);
+	
 		
 	}
 
@@ -45,6 +55,13 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 				//获取手指移动时的坐标
 				int x=(int) event.getRawX();
 				int y=(int) event.getRawY();
+				
+				if(y<=240){
+					tv_dragview_lable.layout(tv_dragview_lable.getLeft(), 220, tv_dragview_lable.getRight(),280);
+				}else {
+					tv_dragview_lable.layout(tv_dragview_lable.getLeft(), 20, tv_dragview_lable.getRight(),80);
+				}
+				
 				//移动的距离
 				int dx=x-startX;
 				int dy=y-startY;
@@ -65,9 +82,16 @@ public class DragViewActivity extends Activity implements OnTouchListener {
 				break;
 			case MotionEvent.ACTION_UP:   //手指离开屏幕
 				Log.i(TAG,"手指离开屏幕" );
+				
+				//手离开屏幕的时候记录下iv_dragview的位置
+				int lastx=iv_dragview.getLeft();
+				int lasty=iv_dragview.getTop();
+				Editor editor=sp.edit();
+				editor.putInt("lastx", lastx);
+				editor.putInt("lasty", lasty);
+				editor.commit();
+				
 				break;
-				
-				
 			}
 			break;
 		}
