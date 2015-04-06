@@ -183,6 +183,8 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 		case R.id.tv_adtools_change_location:
 			
 			//设置一个移动界面
+			Intent intent=new Intent(this,DragViewActivity.class);
+			startActivity(intent);
 			
 			break;
 		}
