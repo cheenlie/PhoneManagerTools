@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundcolor"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:background="@drawable/title_background"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="通信黑名单管理"
+            android:textColor="#fff8f8f8"
+            android:textSize="22sp" >
+        </TextView>
+
+        <Button
+            android:id="@+id/bt_call_sms_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dip"
+            android:text="添加"
+            android:textColor="#fff8f8f8"
+            android:textSize="20sp"
+            android:background="@drawable/button_selector" />
+    </LinearLayout>
+
+    <ListView
+        android:cacheColorHint="@android:color/transparent"
+        android:id="@+id/lv_call_sms_safe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:horizontalSpacing="10dip"
+        android:listSelector="@drawable/item_background"
+        android:verticalSpacing="10dip" >
+    </ListView>
+
+</LinearLayout>

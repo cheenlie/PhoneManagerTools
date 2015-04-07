@@ -11,5 +11,6 @@
     <string name="antivirus">手机杀毒</string>
     <string name="adtools">高级工具</string>
     <string name="querynumber">号码归属地查询</string>
+    <string name="call_sms_safe">通信卫士</string>
 
 </resources>

@@ -78,6 +78,10 @@
             android:label="@string/querynumber" >
         </activity>
         <activity
+            android:name=".ui.CallSmsActivity"
+            android:label="@string/call_sms_safe" >
+        </activity>
+        <activity
             android:name=".ui.DragViewActivity" 
             android:theme="@android:style/Theme.Black.NoTitleBar">
         </activity>

@@ -127,6 +127,11 @@ public class MainActivity extends Activity implements OnItemClickListener   {
 			Intent  lostiIntent=new Intent(MainActivity.this,LostProtectedActivity.class);
 			startActivity(lostiIntent);
 			break;
+		case 1:
+			Log.i(TAG, "进入通信卫士");
+			Intent  CallSmsIntent=new Intent(MainActivity.this,CallSmsActivity.class);
+			startActivity(CallSmsIntent);
+			break;
 		case 5:
 			Log.i(TAG, "进入手机杀毒");
 			Intent  AntivirusIntent=new Intent(MainActivity.this,AntivirusActivity.class);
