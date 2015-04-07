@@ -139,11 +139,11 @@ public class CallSmsActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View view= View.inflate(CallSmsActivity.this, R.layout.call_sms_safe, null);
+			View view= View.inflate(CallSmsActivity.this, R.layout.blacknumbers_item, null);
 			//找到组件并给它赋值
 			TextView textView= (TextView) view.findViewById(R.id.tv_blacknumbers_item);
 			//给textview赋值,返回position位置的值
-			textView.setText(numbers.get(position));
+			textView.setText(numbers.get(position)); 
 			return view;
 		}}
 }
