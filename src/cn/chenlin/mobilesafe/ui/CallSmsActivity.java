@@ -27,6 +27,7 @@ public class CallSmsActivity extends Activity {
 	private Button bt_call_sms_add;
 	private BlackNumberDAO dao;
 	private List<String> numbers;
+	private ArrayAdapter<String> adapter; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +71,22 @@ public class CallSmsActivity extends Activity {
 								} else {
 									dao.add(number);
 									// todo,通知listview更新数据
-									
-									// 第一种做法，缺点：会刷新整个listview，不推荐使用。
+
+//									// 第一种做法，缺点：会刷新整个listview，不推荐使用。
 									numbers = dao.findAllNumbers();
-									// 不加CallSmsActivity在this前会报如下错误，说明不能识别this，估计由内部类引起
-									// The constructor ArrayAdapter<String>(new
-									// DialogInterface.OnClickListener(){}, int,
-									// int, List<String>) is undefined
-									lv_call_sms
-											.setAdapter(new ArrayAdapter<String>(
-													CallSmsActivity.this,
-													R.layout.blacknumbers_item,
-													R.id.tv_blacknumbers_item,
-													numbers));
-									//第二种做法,通知数据适配器更新数据
-									
+//									// 不加CallSmsActivity在this前会报如下错误，说明不能识别this，估计由内部类引起
+//									// The constructor ArrayAdapter<String>(new
+//									// DialogInterface.OnClickListener(){}, int,
+//									// int, List<String>) is undefined
+//									lv_call_sms
+//											.setAdapter(new ArrayAdapter<String>(
+//													CallSmsActivity.this,
+//													R.layout.blacknumbers_item,
+//													R.id.tv_blacknumbers_item,
+//													numbers));
+									// 第二种做法,通知数据适配器更新数据
+									adapter.notifyDataSetChanged();
+
 								}
 
 							}
@@ -107,9 +109,7 @@ public class CallSmsActivity extends Activity {
 
 		numbers = dao.findAllNumbers();
 		// 给listview把数据展现出来就必须用adapter
-		lv_call_sms
-				.setAdapter(new ArrayAdapter<String>(this,
-						R.layout.blacknumbers_item, R.id.tv_blacknumbers_item,
-						numbers));
+		adapter = new ArrayAdapter<String>(this, R.layout.blacknumbers_item,R.id.tv_blacknumbers_item, numbers);
+		lv_call_sms.setAdapter(adapter);
 	}
 }
