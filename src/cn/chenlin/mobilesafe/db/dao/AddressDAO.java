@@ -1,4 +1,4 @@
-package cn.chenlin.mobilesafe.dao;
+package cn.chenlin.mobilesafe.db.dao;
 
 import android.R.string;
 import android.content.Context;

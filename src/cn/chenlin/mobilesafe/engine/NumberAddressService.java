@@ -1,6 +1,6 @@
 package cn.chenlin.mobilesafe.engine;
 
-import cn.chenlin.mobilesafe.dao.AddressDAO;
+import cn.chenlin.mobilesafe.db.dao.AddressDAO;
 import android.R.integer;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
