@@ -140,14 +140,15 @@ public class CallSmsActivity extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 	  AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	  //当前条目的id
+	  int id = (int) info.id;
+	  //获得号码
+	  String number = numbers.get(id);
 	  switch (item.getItemId()) {
 	  case R.id.update_number:
+		  updateBlackNumber(number);
 		  break;
 	  case R.id.delete_number:
-		// 当前条目的id
-		  int id = (int) info.id;
-		  //获得号码
-		  String number = numbers.get(id);
 		  dao.delete(number);
 		  // 重新获取黑名单号码
 		  numbers = dao.findAllNumbers();
@@ -159,7 +160,48 @@ public class CallSmsActivity extends Activity {
 	return false;
 	}
 	
+	/**
+	 * 更改黑名单号码
+	 * @param oldnumber
+	 */
 	
+	private void updateBlackNumber(final String oldnumber) {
+		AlertDialog.Builder builder = new Builder(CallSmsActivity.this);
+		builder.setTitle("更改黑名单号码");
+		final EditText et = new EditText(CallSmsActivity.this);
+		et.setInputType(InputType.TYPE_CLASS_NUMBER);
+		builder.setView(et); // 没有new就会提示你这个方法没有定义
+		builder.setPositiveButton("确定",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						String newnumber = et.getText().toString().trim();
+						if (TextUtils.isEmpty(newnumber)) {
+							Toast.makeText(getApplicationContext(),
+									"输入号码不能为空", 1).show();
+							return;
+						} else {
+							dao.update(oldnumber, newnumber);
+							numbers = dao.findAllNumbers();
+							adapter.notifyDataSetChanged();
+						}
+					}
+				});
+		builder.setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						// 如果点击取消，就执行这个空方法
+					}
+				});
+
+		// 设置好builder后要show出来
+		builder.create().show();
+	}
+
+
 	//自己定义一个adapter，这个adapter是用来操作numbers的，所以返回numbers的相关数据
 	private class CallSmsAdapter extends BaseAdapter{
 
