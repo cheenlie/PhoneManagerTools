@@ -15,10 +15,14 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CallSmsActivity extends Activity {
@@ -27,7 +31,7 @@ public class CallSmsActivity extends Activity {
 	private Button bt_call_sms_add;
 	private BlackNumberDAO dao;
 	private List<String> numbers;
-	private ArrayAdapter<String> adapter; 
+	private CallSmsAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +113,37 @@ public class CallSmsActivity extends Activity {
 
 		numbers = dao.findAllNumbers();
 		// 给listview把数据展现出来就必须用adapter
-		adapter = new ArrayAdapter<String>(this, R.layout.blacknumbers_item,R.id.tv_blacknumbers_item, numbers);
+//		adapter = new ArrayAdapter<String>(this, R.layout.blacknumbers_item,R.id.tv_blacknumbers_item, numbers);
+		adapter=new CallSmsAdapter();
 		lv_call_sms.setAdapter(adapter);
 	}
+	
+	//自己定义一个adapter，这个adapter是用来操作numbers的，所以返回numbers的相关数据
+	private class CallSmsAdapter extends BaseAdapter{
+
+		@Override
+		public int getCount() {
+			return numbers.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return numbers.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view= View.inflate(CallSmsActivity.this, R.layout.call_sms_safe, null);
+			//找到组件并给它赋值
+			TextView textView= (TextView) view.findViewById(R.id.tv_blacknumbers_item);
+			//给textview赋值,返回position位置的值
+			textView.setText(numbers.get(position));
+			return view;
+		}}
 }
