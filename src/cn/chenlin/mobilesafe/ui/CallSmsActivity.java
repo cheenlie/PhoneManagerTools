@@ -13,9 +13,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -42,7 +48,10 @@ public class CallSmsActivity extends Activity {
 		bt_call_sms_add = (Button) this.findViewById(R.id.bt_call_sms_safe);
 
 		dao = new BlackNumberDAO(this);// 必须传进上下文
-
+		
+		// 给listview注册上下文菜单
+		registerForContextMenu(lv_call_sms);
+		
 		// 用匿名内部类的方式实现bt_call_sms_add的点击类
 		bt_call_sms_add.setOnClickListener(new OnClickListener() {
 
@@ -117,6 +126,39 @@ public class CallSmsActivity extends Activity {
 		adapter=new CallSmsAdapter();
 		lv_call_sms.setAdapter(adapter);
 	}
+	
+	//给注册的listview菜单导入界面
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+	                                ContextMenuInfo menuInfo) {
+	  super.onCreateContextMenu(menu, v, menuInfo);
+	  MenuInflater inflater = getMenuInflater();
+	  inflater.inflate(R.menu.context_menu, menu);
+	}
+	
+	//当内容条目被选中后都会执行的
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	  AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	  switch (item.getItemId()) {
+	  case R.id.update_number:
+		  break;
+	  case R.id.delete_number:
+		// 当前条目的id
+		  int id = (int) info.id;
+		  //获得号码
+		  String number = numbers.get(id);
+		  dao.delete(number);
+		  // 重新获取黑名单号码
+		  numbers = dao.findAllNumbers();
+		  //  通知listview更新界面
+		  adapter.notifyDataSetChanged();
+		  break;
+
+	  }
+	return false;
+	}
+	
 	
 	//自己定义一个adapter，这个adapter是用来操作numbers的，所以返回numbers的相关数据
 	private class CallSmsAdapter extends BaseAdapter{
