@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -97,6 +98,12 @@ public class AddressService extends Service {
 		// com.android.internal.R.style.Animation_Toast;
 		params.type = WindowManager.LayoutParams.TYPE_TOAST;
 		params.setTitle("Toast");
+		
+		//params默认是上下左右居中的，那我们通过设置初始值就能改变他的默认值
+		params.gravity=Gravity.LEFT|Gravity.TOP;  //以左和顶部位参照点
+		params.x=sp.getInt("lastx", 0);//设定x轴的偏移量
+		params.y=sp.getInt("lasty", 0);
+		
 
 		// 4.5-1自己设置一个view，并调整其背景颜色和风格。day3-20-[13-20minute]
 		view = View.inflate(getApplicationContext(),
