@@ -1,6 +1,12 @@
 package cn.chenlin.mobilesafe.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import com.android.internal.telephony.ITelephony;
+
 import cn.chenlin.mobilesafe.R;
+import cn.chenlin.mobilesafe.db.dao.BlackNumberDAO;
 import cn.chenlin.mobilesafe.engine.NumberAddressService;
 import android.R.color;
 import android.R.drawable;
@@ -11,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -29,6 +36,7 @@ public class AddressService extends Service {
 	private WindowManager windowManager;
 	private View view;
 	private SharedPreferences sp;
+	private BlackNumberDAO dao;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -40,6 +48,7 @@ public class AddressService extends Service {
 		super.onCreate();
 		listener = new MyPhoneListen();
 		sp = getSharedPreferences("config", MODE_PRIVATE);
+		dao=new BlackNumberDAO(this);// 不初始化就会在使用dao时弹出空指针
 		manger = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		manger.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 		windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
@@ -54,12 +63,18 @@ public class AddressService extends Service {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING: // 响铃状态
 				Log.i(TAG, "来电号码为：" + incomingNumber);
+				
+				if(dao.find(incomingNumber)){
+					endCall();
+				}
+				
 				String address = NumberAddressService
 						.getNumberAddress(incomingNumber);
 				Log.i(TAG, "归属地位：" + address);
 				// Toast.makeText(getApplicationContext(),"归属地为"+address,
 				// 1).show();
 				showLocation(address);
+				
 				break;
 			case TelephonyManager.CALL_STATE_IDLE: // 无呼叫
 				if (view != null) {
@@ -77,6 +92,23 @@ public class AddressService extends Service {
 		}
 		// 不能再内部类里面实现getSystemService函数，好像是因为它不能使用service的this对象，因为它本身就不是service对象
 		// 但是AddressService.this却可以
+
+		private void endCall() {
+			//挂断电话方法是一个系统服务方法，从android2.0以后就不暴露给用户使用，
+			//因此需要使用反射来来获得系统ServiceManager的对象 ，然后再把这个方法映射出来
+			//因此要使用AIDL
+			try {
+				//反射获得getService这个方法
+				Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
+				//然后调用这个getService方法启动TELEPHONY_SERVICE服务，获取电话管理的ibinder对象
+				IBinder binder = (IBinder)method.invoke(null, new Object[]{TELEPHONY_SERVICE});
+				//拿到这个binder对象后转换成interface的接口类型
+				ITelephony telephony = ITelephony.Stub.asInterface(binder);
+				telephony.endCall();
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			} 
+		}
 	}
 
 	/**
