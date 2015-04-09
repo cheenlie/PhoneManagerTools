@@ -1,6 +1,7 @@
 package cn.chenlin.mobilesafe.receiver;
 
 import cn.chenlin.mobilesafe.R;
+import cn.chenlin.mobilesafe.db.dao.BlackNumberDAO;
 import cn.chenlin.mobilesafe.engine.GPSInfoProvider;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
@@ -15,9 +16,11 @@ import android.util.Log;
 
 public class SMSReceiver extends BroadcastReceiver {
 
+	private BlackNumberDAO dao;
 	private static final String TAG = "SMSReceiver";
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		dao=new BlackNumberDAO(context);
 		// 获取短信的内容
 		// #*location*#123456
 		
@@ -76,6 +79,17 @@ public class SMSReceiver extends BroadcastReceiver {
 				player.start();
 				//也要拦截短信
 				abortBroadcast();
+			}
+			
+			if(dao.find(sender)){
+				//如果是黑名单里面的内容那就拦截这个短信
+				abortBroadcast();
+			}
+			
+			//短信包含“广告、发票、抽奖等等”表示黑名单短信
+			if(content.contains("发票")){
+				abortBroadcast();
+				//todo: 把短信内容存到数据库
 			}
 				
 		}
