@@ -60,66 +60,7 @@ public class CallSmsActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new Builder(CallSmsActivity.this);
-				builder.setTitle("添加黑名单号码");
-				final EditText et = new EditText(CallSmsActivity.this);
-
-				// 设置输入数据的类型
-				et.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-				// bulider是通过setview往里面设view的,这个et便是view对象
-				builder.setView(et); // 没有new就会提示你这个方法没有定义
-				builder.setPositiveButton("确定",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// Cannot refer to a non-final variable et
-								// inside an inner class defined in a different
-								// method
-								// 不能在内部类里面引用非final成员
-								String number = et.getText().toString().trim();
-								// 判断字符串是否为空用TextUtils
-								if (TextUtils.isEmpty(number)) {
-									Toast.makeText(getApplicationContext(),
-											"输入号码不能为空", 1).show();
-									return;
-								} else {
-									dao.add(number);
-									// todo,通知listview更新数据
-
-//									// 第一种做法，缺点：会刷新整个listview，不推荐使用。
-									numbers = dao.findAllNumbers();
-//									// 不加CallSmsActivity在this前会报如下错误，说明不能识别this，估计由内部类引起
-//									// The constructor ArrayAdapter<String>(new
-//									// DialogInterface.OnClickListener(){}, int,
-//									// int, List<String>) is undefined
-//									lv_call_sms
-//											.setAdapter(new ArrayAdapter<String>(
-//													CallSmsActivity.this,
-//													R.layout.blacknumbers_item,
-//													R.id.tv_blacknumbers_item,
-//													numbers));
-									// 第二种做法,通知数据适配器更新数据
-									adapter.notifyDataSetChanged();
-
-								}
-
-							}
-						});
-				builder.setNegativeButton("取消",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// 如果点击取消，就执行这个空方法
-							}
-						});
-
-				// 设置好builder后要show出来
-				builder.create().show();
-
+				showInputDialog("");
 			}
 		});
 
@@ -130,13 +71,58 @@ public class CallSmsActivity extends Activity {
 		lv_call_sms.setAdapter(adapter);
 	}
 	
+	private void showInputDialog(String number) {
+		AlertDialog.Builder builder = new Builder(CallSmsActivity.this);
+		builder.setTitle("添加黑名单号码");
+		final EditText et = new EditText(CallSmsActivity.this);
+		// 设置输入数据的类型
+		et.setInputType(InputType.TYPE_CLASS_NUMBER);
+		et.setText(number);
+		// bulider是通过setview往里面设view的,这个et便是view对象
+		builder.setView(et); // 没有new就会提示你这个方法没有定义
+		builder.setPositiveButton("确定",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						// 不能在内部类里面引用非final成员
+						String number = et.getText().toString().trim();
+						// 判断字符串是否为空用TextUtils
+						if (TextUtils.isEmpty(number)) {
+							Toast.makeText(getApplicationContext(),
+									"输入号码不能为空", 1).show();
+							return;
+						} else {
+							dao.add(number);
+//							// 第一种做法，缺点：会刷新整个listview，不推荐使用。
+							numbers = dao.findAllNumbers();
+							// 第二种做法,通知数据适配器更新数据
+							adapter.notifyDataSetChanged();
+						}
+					}
+				});
+		builder.setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						// 如果点击取消，就执行这个空方法
+					}
+				});
+		// 设置好builder后要show出来
+		builder.create().show();
+	}
+	
 	//重写一个onstart方法，这个方法在界面变成可见界面的时候调用
 	@Override
 	protected void onStart() {
 		super.onStart();
 		Intent intent=getIntent();//获取其他activity传过来的intent
-		if(intent.getStringExtra("number")!=null){
+		//获取notification传过来的数据
+		String number=intent.getStringExtra("number"); 
+		if(number!=null){
 			Log.i(TAG,"提示用户添加黑名单");
+			showInputDialog(number);
 		}
 		
 	}
