@@ -11,13 +11,16 @@ import cn.chenlin.mobilesafe.engine.NumberAddressService;
 import android.R.color;
 import android.R.drawable;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -66,6 +69,12 @@ public class AddressService extends Service {
 				
 				if(dao.find(incomingNumber)){
 					endCall();
+					
+					//创建记录不是马上就完成的，所以删除记录的动作需要和创建记录同步
+					//第一种：延迟几秒删除，用户体验不好；第二种：用内容观察者方式来实现
+					//对于第二种方法先注册一个内容观察者，观察calllog里面的URI是否发生改变
+					
+					deleteCallLog(incomingNumber);
 				}
 				
 				String address = NumberAddressService
@@ -90,6 +99,20 @@ public class AddressService extends Service {
 				break;
 			}
 		}
+		
+		/**
+		 * 删除通话记录日志
+		 * @param incomingNumber
+		 */
+		private void deleteCallLog(String incomingNumber) {
+			ContentResolver resolver=getContentResolver();
+			Cursor cursor=resolver.query(CallLog.Calls.CONTENT_URI, null, "number=?", new String[]{incomingNumber}, null);
+			if(cursor.moveToNext()){  //在呼叫记录中找到了这个号码
+				String id=cursor.getString(cursor.getColumnIndex("_id"));
+				resolver.delete(CallLog.Calls.CONTENT_URI, "_id=?", new String[]{id});
+			}
+		}
+		
 		// 不能再内部类里面实现getSystemService函数，好像是因为它不能使用service的this对象，因为它本身就不是service对象
 		// 但是AddressService.this却可以
 
