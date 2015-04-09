@@ -10,9 +10,11 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 
 public class CallSmsActivity extends Activity {
 
+	private static final String TAG = "CallSmsActivity";
 	private ListView lv_call_sms;
 	private Button bt_call_sms_add;
 	private BlackNumberDAO dao;
@@ -127,6 +130,17 @@ public class CallSmsActivity extends Activity {
 		lv_call_sms.setAdapter(adapter);
 	}
 	
+	//重写一个onstart方法，这个方法在界面变成可见界面的时候调用
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Intent intent=getIntent();//获取其他activity传过来的intent
+		if(intent.getStringExtra("number")!=null){
+			Log.i(TAG,"提示用户添加黑名单");
+		}
+		
+	}
+	
 	//给注册的listview菜单导入界面
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -136,6 +150,8 @@ public class CallSmsActivity extends Activity {
 	  inflater.inflate(R.menu.context_menu, menu);
 	}
 	
+
+
 	//当内容条目被选中后都会执行的
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {

@@ -8,10 +8,15 @@ import com.android.internal.telephony.ITelephony;
 import cn.chenlin.mobilesafe.R;
 import cn.chenlin.mobilesafe.db.dao.BlackNumberDAO;
 import cn.chenlin.mobilesafe.engine.NumberAddressService;
+import cn.chenlin.mobilesafe.ui.CallSmsActivity;
 import android.R.color;
 import android.R.drawable;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
@@ -42,6 +47,8 @@ public class AddressService extends Service {
 	private View view;
 	private SharedPreferences sp;
 	private BlackNumberDAO dao;
+	private long starttime;
+	private long endtime;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -69,6 +76,8 @@ public class AddressService extends Service {
 			case TelephonyManager.CALL_STATE_RINGING: // 响铃状态
 				Log.i(TAG, "来电号码为：" + incomingNumber);
 				
+				starttime=System.currentTimeMillis();
+				
 				if(dao.find(incomingNumber)){
 					endCall();
 					
@@ -88,6 +97,15 @@ public class AddressService extends Service {
 				
 				break;
 			case TelephonyManager.CALL_STATE_IDLE: // 无呼叫
+				
+				endtime=System.currentTimeMillis();
+				if(starttime<endtime && endtime-starttime<2000)
+				{
+					Log.i(TAG,incomingNumber+"是一个响一声电话");
+					//弹出出notification通知用户这是一个骚扰电话
+					showNotification(incomingNumber);
+				}
+				
 				if (view != null) {
 					windowManager.removeView(view);
 					view = null;
@@ -104,7 +122,6 @@ public class AddressService extends Service {
 		
 		// 不能再内部类里面实现getSystemService函数，好像是因为它不能使用service的this对象，因为它本身就不是service对象
 		// 但是AddressService.this却可以
-
 		private void endCall() {
 			//挂断电话方法是一个系统服务方法，从android2.0以后就不暴露给用户使用，
 			//因此需要使用反射来来获得系统ServiceManager的对象 ，然后再把这个方法映射出来
@@ -123,6 +140,36 @@ public class AddressService extends Service {
 		}
 	}
 
+	/**
+	 * 弹出notification通知用户添加黑名单
+	 * @param incomingNumber
+	 */
+	private void showNotification(String incomingNumber) {
+		//1. 获取notification的管理服务
+				NotificationManager  manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				//2 把一个要想显示的notification 对象创建出来
+				int icon =R.drawable.notification;
+				CharSequence tickerText = "发现响一声号码";
+				long when = System.currentTimeMillis();
+
+				Notification notification = new Notification(icon, tickerText, when);
+				// 3 .配置notification的一些参数
+				Context context = getApplicationContext();
+				CharSequence contentTitle = "响一声号码";
+				CharSequence contentText = incomingNumber;
+				//点击一下这个notification就会消失
+				notification.flags = Notification.FLAG_AUTO_CANCEL;
+				
+				Intent notificationIntent = new Intent(this, CallSmsActivity.class);
+				// 把响一声的号码 设置到intent对象里面
+				notificationIntent.putExtra("number", incomingNumber);
+				PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+				notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+				
+				// 4. 通过manger把notification 激活
+				manager.notify(0, notification);
+	}
 	/**
 	 * 删除通话记录日志
 	 * @param incomingNumber
