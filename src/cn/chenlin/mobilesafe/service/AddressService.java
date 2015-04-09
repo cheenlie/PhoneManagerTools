@@ -14,10 +14,12 @@ import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.CallLog;
@@ -49,7 +51,7 @@ public class AddressService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		listener = new MyPhoneListen();
+		listener = new MyPhoneListener();
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 		dao=new BlackNumberDAO(this);// 不初始化就会在使用dao时弹出空指针
 		manger = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
@@ -57,7 +59,7 @@ public class AddressService extends Service {
 		windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
 	}
 
-	public class MyPhoneListen extends PhoneStateListener {
+	public class MyPhoneListener extends PhoneStateListener {
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
@@ -73,8 +75,8 @@ public class AddressService extends Service {
 					//创建记录不是马上就完成的，所以删除记录的动作需要和创建记录同步
 					//第一种：延迟几秒删除，用户体验不好；第二种：用内容观察者方式来实现
 					//对于第二种方法先注册一个内容观察者，观察calllog里面的URI是否发生改变
-					
-					deleteCallLog(incomingNumber);
+					getContentResolver().registerContentObserver(CallLog.Calls.CONTENT_URI, true, new MyObserver(new Handler(), incomingNumber));
+				
 				}
 				
 				String address = NumberAddressService
@@ -100,19 +102,6 @@ public class AddressService extends Service {
 			}
 		}
 		
-		/**
-		 * 删除通话记录日志
-		 * @param incomingNumber
-		 */
-		private void deleteCallLog(String incomingNumber) {
-			ContentResolver resolver=getContentResolver();
-			Cursor cursor=resolver.query(CallLog.Calls.CONTENT_URI, null, "number=?", new String[]{incomingNumber}, null);
-			if(cursor.moveToNext()){  //在呼叫记录中找到了这个号码
-				String id=cursor.getString(cursor.getColumnIndex("_id"));
-				resolver.delete(CallLog.Calls.CONTENT_URI, "_id=?", new String[]{id});
-			}
-		}
-		
 		// 不能再内部类里面实现getSystemService函数，好像是因为它不能使用service的this对象，因为它本身就不是service对象
 		// 但是AddressService.this却可以
 
@@ -134,6 +123,19 @@ public class AddressService extends Service {
 		}
 	}
 
+	/**
+	 * 删除通话记录日志
+	 * @param incomingNumber
+	 */
+	private void deleteCallLog(String incomingNumber) {
+		ContentResolver resolver=getContentResolver();
+		Cursor cursor=resolver.query(CallLog.Calls.CONTENT_URI, null, "number=?", new String[]{incomingNumber}, null);
+		if(cursor.moveToNext()){  //在呼叫记录中找到了这个号码
+			String id=cursor.getString(cursor.getColumnIndex("_id"));
+			resolver.delete(CallLog.Calls.CONTENT_URI, "_id=?", new String[]{id});
+		}
+	}
+	
 	/**
 	 * 在窗体上显示归属地信息
 	 * 
@@ -195,5 +197,32 @@ public class AddressService extends Service {
 
 		manger.listen(listener, PhoneStateListener.LISTEN_NONE);
 		listener = null;
+	}
+	
+	/**
+	 * 定义了一个观察者必须重写onChange方法，以便捕获什么时候发生改变
+	 * @author Administrator
+	 *
+	 */
+	public class MyObserver extends ContentObserver{
+
+		//把变化的电话号码也传进来
+		private  String incomingnumber;
+		
+		public MyObserver(Handler handler,String incomingnumber) {
+			super(handler);
+			this.incomingnumber=incomingnumber;
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			
+			//发生改变后再删除通话记录
+			deleteCallLog(incomingnumber);
+			
+			//contentObserver用的是回调，用完后应该取消，会耗费资源
+			getContentResolver().unregisterContentObserver(this);
+		}
 	}
 }
