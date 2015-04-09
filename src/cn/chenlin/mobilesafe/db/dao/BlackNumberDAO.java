@@ -9,9 +9,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class BlackNumberDAO {
 
+	private static final String TAG = "BlackNumberDAO";
 	//在这个类里面要使用context
 	private Context context;
 	//在构造函数里面把它初始化
@@ -31,7 +33,7 @@ public class BlackNumberDAO {
 		boolean result=false;
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery(
-					"select * from blacknumber where number=?",
+					"select number from blacknumber where number=?",
 					new String[] { number });
 			if (cursor.moveToNext()) {
 				result=true;
