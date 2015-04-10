@@ -5,6 +5,7 @@ import java.io.File;
 import cn.chenlin.mobilesafe.R;
 import cn.chenlin.mobilesafe.engine.*;
 import cn.chenlin.mobilesafe.service.AddressService;
+import cn.chenlin.mobilesafe.service.BackupSmsService;
 import cn.chenlin.mobilesafe.service.SmsInfoService;
 import android.R.string;
 import android.app.Activity;
@@ -51,7 +52,6 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 	private TextView tv_change_location;
 	private TextView tv_sms_backup;
 	private TextView tv_sms_restore;
-	private Intent smsInfoServiceIntent;
 
 	private Handler handler = new Handler() {
 
@@ -80,7 +80,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 		tv_sms_restore=(TextView) findViewById(R.id.tv_adtools_sms_restore);
 		
 		tv_sms_backup.setOnClickListener(this);
-		tv_sms_backup.setOnClickListener(this);
+		tv_sms_restore.setOnClickListener(this);
 		
 		tv_adtools_service_status = (TextView) this
 				.findViewById(R.id.tv_adtools_service_status);
@@ -92,7 +92,6 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 
 		tv_setbg.setOnClickListener(this); // 和下面的tv_adtools_query的点击事件共用一个onClick（）
 
-		serviceIntent = new Intent(this, AddressService.class);
 
 		cb_adtools_status_control
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -198,6 +197,9 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.tv_adtools_sms_backup:
 			//备份需要把短信内容转换成xml文件
+			
+			Intent intent1 = new Intent(this, BackupSmsService.class);
+			startService(intent1);
 			
 			break;
 		case R.id.tv_adtools_sms_restore:
