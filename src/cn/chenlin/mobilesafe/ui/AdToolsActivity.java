@@ -26,6 +26,7 @@ import android.location.Address;
 import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.ShareCompat;
 import android.view.View;
@@ -52,6 +53,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 	private TextView tv_change_location;
 	private TextView tv_sms_backup;
 	private TextView tv_sms_restore;
+	private  SmsInfoService smsInfoService;
 
 	private Handler handler = new Handler() {
 
@@ -78,7 +80,6 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 		sp=getSharedPreferences("config", Context.MODE_PRIVATE);
 		tv_sms_backup=(TextView) findViewById(R.id.tv_adtools_sms_backup);
 		tv_sms_restore=(TextView) findViewById(R.id.tv_adtools_sms_restore);
-		
 		tv_sms_backup.setOnClickListener(this);
 		tv_sms_restore.setOnClickListener(this);
 		
@@ -203,6 +204,39 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 			
 			break;
 		case R.id.tv_adtools_sms_restore:
+			//读取xml文件
+			//解析xml文件后插入到短信应用程序中	
+			//防止还原途中被用户中断，因此采用弹出对话框形式，让程序自己关闭，用户不能控制
+			final ProgressDialog pd=new ProgressDialog(this);
+			pd.setCancelable(false);//不能被取消
+			pd.setMessage("正在还原短信");
+			pd.show();//把对话框显示出来
+			smsInfoService=new SmsInfoService(this);
+			//是个耗时操作，放在子线程中运行
+			new Thread(){
+				//在Thread中必须重写run方法，要不没法识Threa外的函数变量
+				@Override
+				public void run() {
+					super.run();
+			System.out.println("huifuzhong");		
+					try {
+						smsInfoService.restoreSms("/sdcard/smsbackup.xml");
+						pd.dismiss();
+						//如果成功了就弹出恢复成功对话框
+						Looper.prepare();
+						Toast.makeText(getApplicationContext(), "短信恢复完成", 1).show();
+						Looper.loop();//手动的轮循一下
+					} catch (Exception e) {
+						e.printStackTrace();
+						pd.dismiss();
+						Looper.prepare();
+						Toast.makeText(getApplicationContext(), "短信恢复失败", 1).show();
+						Looper.loop();//手动的轮循一下
+					}
+					
+				}
+			}.start();
+			
 			break;
 		}
 	}

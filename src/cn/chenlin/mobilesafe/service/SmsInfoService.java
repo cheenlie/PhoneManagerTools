@@ -1,15 +1,23 @@
 package cn.chenlin.mobilesafe.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.entity.ContentProducer;
+import org.xml.sax.Parser;
+import org.xmlpull.v1.XmlPullParser;
 
 import cn.chenlin.mobilesafe.domain.SmsInfo;
+import android.R.integer;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Xml;
 
 public class SmsInfoService {
 	private Context context;
@@ -45,5 +53,48 @@ public class SmsInfoService {
 		return smsInfos;
 	}
 	
-	
+	/**
+	 * 还原短信
+	 * @param path，备份文件的存放位置
+	 */
+	public void  restoreSms(String path) throws Exception{
+		File file=new File(path);
+//		try {
+			ContentValues values;
+			FileInputStream inputStream=new FileInputStream(file);
+			XmlPullParser parser=Xml.newPullParser(); 
+			parser.setInput(inputStream,"utf-8"); //file->stream->parser
+			int type=parser.getEventType();
+			values=null;
+			while(type!=XmlPullParser.END_DOCUMENT){
+				switch (type){
+				case XmlPullParser.START_TAG:
+					if("sms".equals(parser.getName())){
+						values=new ContentValues();
+						//id是自增长的，所以可以不用插入
+					}else if ("address".equals(parser.getName())){
+						values.put("address",parser.nextText());  //逐个向后遍历
+					}else if ("date".equals(parser.getName())){
+						values.put("date",parser.nextText());
+					}else if ("type".equals(parser.getName())){
+						values.put("type",parser.nextText());
+					}else if ("body".equals(parser.getName())){
+						values.put("body",parser.nextText());
+					}
+					break;
+				case XmlPullParser.END_TAG:
+					if("sms".equals(parser.getName())){
+						ContentResolver resolver=context.getContentResolver();
+						resolver.insert(Uri.parse("content://sms/"), values);
+						values=null;
+					}
+					break;
+
+				}
+				type=parser.next();  //必须向后移动不移动就会停在这儿
+			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+	}
 }
