@@ -29,7 +29,7 @@ public class MainUIAdapter extends BaseAdapter {
 							         "任务管理","上网管理","手机杀毒",
 							         "系统优化","高级工具","设置中心" };
 	private static int[]  icons={
-						R.drawable.widget05,R.drawable.widget02,R.drawable.widget01,
+						R.drawable.widget09,R.drawable.widget02,R.drawable.widget01,
 						R.drawable.widget07,R.drawable.widget05,R.drawable.widget04,
 						R.drawable.widget06,R.drawable.widget03,R.drawable.widget08	};
 	@Override

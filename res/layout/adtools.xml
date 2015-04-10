@@ -92,4 +92,36 @@
         android:background="@android:color/white" >
     </View>
     
+    <TextView
+        android:id="@+id/tv_adtools_sms_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:text="短信备份"
+        android:textSize="24sp" >
+    </TextView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white" >
+    </View>
+    
+    <TextView
+        android:id="@+id/tv_adtools_sms_restore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:text="短信还原"
+        android:textSize="24sp" >
+    </TextView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white" >
+    </View>
+    
 </LinearLayout>
