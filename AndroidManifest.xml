@@ -94,7 +94,7 @@
             android:src="@drawable/icon5" 
             android:label="SystemService">
         </service>
-
+		<service android:name=".service.BackupSmsService"></service>
         <receiver android:name=".receiver.CallPhoneReceiver" >
             <intent-filter android:priority="1000" >
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
