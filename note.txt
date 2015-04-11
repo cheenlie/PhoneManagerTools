@@ -1,27 +1,27 @@
-1. ��com.android.provider.telephonyĿ¼�´�ŵ��Ƕ�����Ϣ.�����и��ļ���mmssms.db,ǰ��mms��ʾ���ţ�sms��ʾ����
-2. �ֻ����ļ�Ȩ�ޣ�drwxrwxrwx��ĩβ��λ����������Ŀ���Ȩ�ޡ�
-3. ��û����������²鿴����Դ���룬�÷����빤��
-4. ���������ṩ�ߵ�ǰ׺�ǡ�content��//������������sms���ڶ�������������淴�����������ʾ��Ϊ��android:authorities="sms"�������������������ôд�ģ�������仰��<provider android:name="SmsProvider" android:readPermission="android.permission.READ_SMS" android:writePermission="android.permission.WRITE_SMS" android:multiprocess="true" android:authorities="sms" /> ������Ҫȥ����Դ�����smsprovider���֡���Դ�벽��Ϊ����ѹapk�ļ�Ϊdex�ļ�����ʹ��dex2jar����ת����jar�ļ����Ϳ���ֱ�ӿ�Դ�����ˡ�
-5. ���в�ѯ�Ľ������Cursor������Cursor cursor=resolver.query();
-6. �½�һ���������Ĺ��캯����ʱ��Ҳ����һ�������εĹ��캯���������򲻳����⡣
-7. �ö��������ԣ�assertEquals(5, smsInfos.size());
-8. �ڴ治�����⣬�ڱ��ݶ��ŵ�ʱ�����ڶ��Ź��࣬���ܱ���ռ�ÿռ�ͱȽϴ�
-   ���ʹ�����̵߳Ļ����ռ䲻��ͻᱻϵͳ���ա����ʹ�÷�������ɱ��ݣ�����������ȼ��߾Ͳ��ױ�ϵͳ�����ˣ�ʱ������service��Ҳ��ʹ�õ����̹߳��ܣ���
-9. ���߳�����Thread(){}���������дrun()����
-10. ����һ��xml�ļ���Ȼ����һ�����л������Ѷ��Ŵ����档
-11. ���߳�����Ĭ�ϲ�����ʾ��˾�ģ���Ϊ���߳�����û��looper��handler����Ϣ���С�
-	���ǿ����ֶ��½�һ����˾
-12. �½�һ��xml�ļ�
+﻿1. 在com.android.provider.telephony目录下存放的是短信信息.其中有个文件是mmssms.db,前面mms表示彩信，sms表示短信
+2. 手机中文件权限，drwxrwxrwx，末尾三位是其他程序的控制权限。
+3. 在没有网络情况下查看程序源代码，用反编译工具
+4. 所有内容提供者的前缀是“content：//”，主机名是sms，在短信这个程序里面反编译出来是显示的为“android:authorities="sms"”，这个主机名具体怎么写的，依据这句话“<provider android:name="SmsProvider" android:readPermission="android.permission.READ_SMS" android:writePermission="android.permission.WRITE_SMS" android:multiprocess="true" android:authorities="sms" /> ”，就要去看看源代码的smsprovider部分。看源码步骤为：解压apk文件为dex文件，再使用dex2jar工具转换成jar文件，就可以直接看源代码了。
+5. 所有查询的结果都是Cursor，比如Cursor cursor=resolver.query();
+6. 新建一个含参数的构造函数的时候也建立一个不含参的构造函数，保程序不出问题。
+7. 用断言来测试，assertEquals(5, smsInfos.size());
+8. 内存不足问题，在备份短信的时候由于短信过多，可能备份占用空间就比较大。
+   如果使用子线程的话，空间不足就会被系统回收。因此使用服务来完成备份，这个服务优先级高就不易被系统回收了（时间上在service中也是使用的子线程功能）。
+9. 子线程里面Thread(){}里面必须重写run()方法
+10. 定义一个xml文件，然后定义一个序列化器，把短信存里面。
+11. 子线程里面默认不能显示土司的，因为子线程里面没有looper，handler，消息队列。
+	但是可以手动新建一个土司
+12. 新建一个xml文件
 
-13. ��ȡxml�ļ���
-14. ����Ϣ���뵽���ų����С�[������Ҫ���̣߳�//��Thread�б�����дrun������Ҫ��û��ʶThrea��ĺ�������]
-    �ָ�������Ϊ�˷�ֹ��;���жϣ��ٴλ�ԭ��ʱ��������������ݣ���Ҫ����һ�������û�����ֹͣҲ�����жϡ�
+13. 读取xml文件；
+14. 把信息插入到短信程序中。[还是需要子线程，//在Thread中必须重写run方法，要不没法识Threa外的函数变量]
+    恢复过程中为了防止中途被中断，再次还原的时候而产生冗余数据，需要弹出一个框，让用户不能停止也不能中断。
 final ProgressDialog pd = new ProgressDialog(this);
 pd.setCancelable(false);
 pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-pd.setMessage("���ڻ�ԭ����");	
+pd.setMessage("正在还原短信");	
 15. Cannot refer to a non-final variable pd inside an inner class defined in a different method	
 
-16. ���ݵ�ʱ�򵯳�dialog����ʾ���ȡ�[�и�bug��û�н��ж����ظ����ж�]
-17. //�����ļ�ʱĬ�ϰ������ļ��ŵ�filepathĿ¼�£����ݽ��ȣ�ֻ��Ҫ����progressdialog��pd���󼴿ɡ�
+16. 备份的时候弹出dialog并显示进度。[有个bug，没有进行短信重复性判断]
+17. //下载文件时默认把下载文件放到filepath目录下；传递进度，只需要传入progressdialog的pd对象即可。
      File file=DownLoadFileTask.getFile(path, filepath,pd);
