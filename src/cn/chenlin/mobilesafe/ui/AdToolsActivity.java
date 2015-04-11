@@ -8,6 +8,7 @@ import cn.chenlin.mobilesafe.service.AddressService;
 import cn.chenlin.mobilesafe.service.BackupSmsService;
 import cn.chenlin.mobilesafe.service.SmsInfoService;
 import android.R.string;
+import android.R.style;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -208,6 +209,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 			//解析xml文件后插入到短信应用程序中	
 			//防止还原途中被用户中断，因此采用弹出对话框形式，让程序自己关闭，用户不能控制
 			final ProgressDialog pd=new ProgressDialog(this);
+			pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			pd.setCancelable(false);//不能被取消
 			pd.setMessage("正在还原短信");
 			pd.show();//把对话框显示出来
@@ -220,7 +222,7 @@ public class AdToolsActivity extends Activity implements OnClickListener {
 					super.run();
 			System.out.println("huifuzhong");		
 					try {
-						smsInfoService.restoreSms("/sdcard/smsbackup.xml");
+						smsInfoService.restoreSms("/sdcard/smsbackup.xml",pd);
 						pd.dismiss();
 						//如果成功了就弹出恢复成功对话框
 						Looper.prepare();

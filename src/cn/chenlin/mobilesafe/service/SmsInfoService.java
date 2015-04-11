@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import cn.chenlin.mobilesafe.domain.SmsInfo;
 import android.R.integer;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -57,7 +58,7 @@ public class SmsInfoService {
 	 * 还原短信
 	 * @param path，备份文件的存放位置
 	 */
-	public void  restoreSms(String path) throws Exception{
+	public void  restoreSms(String path,ProgressDialog pd) throws Exception{
 		File file=new File(path);
 //		try {
 			ContentValues values;
@@ -66,9 +67,15 @@ public class SmsInfoService {
 			parser.setInput(inputStream,"utf-8"); //file->stream->parser
 			int type=parser.getEventType();
 			values=null;
+			int currentCount=0;
 			while(type!=XmlPullParser.END_DOCUMENT){
 				switch (type){
 				case XmlPullParser.START_TAG:
+					if("count".equals(parser.getName())){
+						String count=parser.nextText();
+						pd.setMax(Integer.parseInt(count));
+						
+					}
 					if("sms".equals(parser.getName())){
 						values=new ContentValues();
 						//id是自增长的，所以可以不用插入
@@ -88,8 +95,9 @@ public class SmsInfoService {
 						resolver.insert(Uri.parse("content://sms/"), values);
 						values=null;
 					}
+					currentCount++;
+					pd.setProgress(currentCount);
 					break;
-
 				}
 				type=parser.next();  //必须向后移动不移动就会停在这儿
 			}

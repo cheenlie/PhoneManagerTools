@@ -151,6 +151,7 @@ public class SplashActivity extends Activity {
 		public void run() { //实现Runnable接口没实现的方法
 			try {
 				Log.i(TAG,"--run--");
+				//下载文件时默认把下载文件放到filepath目录下
 				File file=DownLoadFileTask.getFile(path, filepath,pd);
 				Log.i(TAG,"下载成功");
 				pd.dismiss();
